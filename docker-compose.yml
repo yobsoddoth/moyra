@@ -1,0 +1,55 @@
+version: '2'
+
+services:
+  rabbitmq:
+    image: docker.io/bitnami/rabbitmq:3.10
+    container_name: rabbit_broker
+    ports:
+      - '4369:4369'
+      - '5551:5551'
+      - '5552:5552'
+      - '5672:5672'
+      - '25672:25672'
+      - '15672:15672'
+    environment:
+      - RABBITMQ_SECURE_PASSWORD=yes
+      - RABBITMQ_LOGS=-
+    volumes:
+      - './rabbitmq_data:/bitnami/rabbitmq/mnesia'
+
+  mariadb:
+    image: docker.io/bitnami/mariadb:11.0
+    container_name: sql_db
+    environment:
+      - ALLOW_EMPTY_PASSWORD=no
+      - MARIADB_ROOT_PASSWORD=HftR&nx!Eb$na5La
+      - MARIADB_USER=moyra
+      - MARIADB_DATABASE=moyra
+      - MARIADB_PASSWORD=m0Yr4
+
+  backend:
+    image: docker.io/bitnami/laravel:10
+    container_name: be_php
+    ports:
+      - '8000:8000'
+      - '5173:5173'
+    environment:
+      - LARAVEL_PORT_NUMBER=8000
+      - QUEUE_CONNECTION=rabbitmq
+      - DB_HOST=mariadb
+      - DB_PORT=3306
+      - DB_USERNAME=moyra
+      - DB_DATABASE=moyra
+      - DB_PASSWORD=m0Yr4
+      - RABBITMQ_HOST=rabbitmq
+      - RABBITMQ_USER=rabbitmq
+      - RABBITMQ_PASSWORD=rabbitmq_pass
+    volumes:
+      - './backend/src:/app'
+    depends_on:
+      - mariadb
+      - rabbitmq
+
+volumes:
+  rabbitmq_data:
+    driver: local
