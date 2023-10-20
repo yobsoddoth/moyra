@@ -128,6 +128,10 @@ viz.then(viz => {
     document.querySelectorAll(".node").forEach((node) => {
         node.addEventListener('click', (e) => {
             console.log(e.target.parentElement.getAttribute('id'))
+            console.log($editor)
+
+            let episodeId = e.target.parentElement.getAttribute('id')
+            tinymce.activeEditor.setContent(episodeId);
         })
     })
 });
