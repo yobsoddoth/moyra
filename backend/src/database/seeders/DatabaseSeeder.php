@@ -121,7 +121,7 @@ class DatabaseSeeder extends Seeder
 
         $episodeJunction = Episode::create([
             'book_id' => $book->id,
-            'summary' => 'turned right',
+            'summary' => 'it\'s a junction',
         ]);
         $episodeJunction->i18n()->save(new EpisodeI18n([
             'language_id' => 1,
