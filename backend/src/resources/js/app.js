@@ -16,6 +16,7 @@ import 'tinymce/plugins/preview';
 import 'tinymce/plugins/searchreplace';
 import 'tinymce/plugins/visualblocks';
 
+import Choice from './choice'
 
 const graph = {
     graphAttributes: {
@@ -92,21 +93,21 @@ const viz = instance()
 let $graph = document.getElementById('graph')
 let $svgRendition;
 
-let $button = document.createElement('BUTTON')
-$button.appendChild(document.createTextNode('add to graph'))
+// let $button = document.createElement('BUTTON')
+// $button.appendChild(document.createTextNode('add to graph'))
 
-$button.addEventListener('click', () => {
-    console.log('button clicked')
-    bookSchema.nodes.push({ name: "dynamic node", attributes: { label: { html: "<b>Dyn</b>" }, color: "cyan" } })
-    bookSchema.edges.push({ tail: "E4", head: "dynamic node", attributes: { label: "dynamic link" } })
+// $button.addEventListener('click', () => {
+//     console.log('button clicked')
+//     bookSchema.nodes.push({ name: "dynamic node", attributes: { label: { html: "<b>Dyn</b>" }, color: "cyan" } })
+//     bookSchema.edges.push({ tail: "E4", head: "dynamic node", attributes: { label: "dynamic link" } })
 
-    viz.then(viz => {
-        $svgRendition = viz.renderSVGElement(bookSchema)
-        $graph.innerHTML = ""
-        $graph.appendChild($svgRendition)
-    })
-})
-document.body.appendChild($button)
+//     viz.then(viz => {
+//         $svgRendition = viz.renderSVGElement(bookSchema)
+//         $graph.innerHTML = ""
+//         $graph.appendChild($svgRendition)
+//     })
+// })
+// document.body.appendChild($button)
 
 let $editor = tinymce.init({
     selector: 'textarea#text-editor',
@@ -125,13 +126,28 @@ let $editor = tinymce.init({
 viz.then(viz => {
     $svgRendition = viz.renderSVGElement(bookSchema)
     $graph.appendChild($svgRendition)
+
     document.querySelectorAll(".node").forEach((node) => {
         node.addEventListener('click', (e) => {
             console.log(e.target.parentElement.getAttribute('id'))
-            console.log($editor)
 
-            let episodeId = e.target.parentElement.getAttribute('id')
+            let $epiNode = e.target.parentElement
+            let episodeId = $epiNode.getAttribute('id')
+            let episodeSummary = $epiNode.querySelector('text').innerHTML
+
+            document.getElementById('episode-summary').innerHTML = episodeSummary
             tinymce.activeEditor.setContent(episodeId);
+
+            let $choices = document.getElementById('episode-choices-panel')
+            $choices.innerHTML = ''
+
+            let $choice = new Choice('choice')
+            $choices.appendChild($choice.render())
         })
+    })
+    document.getElementById('btn-add-choice').addEventListener('click', (e) => {
+        let $choices = document.getElementById('episode-choices-panel')
+        let $choice = new Choice('choice')
+        $choices.appendChild($choice.render())
     })
 });
