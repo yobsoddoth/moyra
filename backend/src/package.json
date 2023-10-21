@@ -13,6 +13,7 @@
     "dependencies": {
         "@viz-js/lang-dot": "^1.0.2",
         "@viz-js/viz": "^3.2.1",
-        "tinymce": "^6.7.1"
+        "tinymce": "^6.7.1",
+        "uuid": "^9.0.1"
     }
 }

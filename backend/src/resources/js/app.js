@@ -111,7 +111,6 @@ let $svgRendition;
 
 let $editor = tinymce.init({
     selector: 'textarea#text-editor',
-    // height: 500,
     skin: false,
     content_css: false,
     menubar: false,
@@ -122,6 +121,10 @@ let $editor = tinymce.init({
       'alignleft aligncenter alignright alignjustify | ' +
       'bullist numlist checklist outdent indent | removeformat | a11ycheck code table help',
   });
+
+document.addEventListener('moyra:episode-make', (e) => {
+    console.log(e.detail)
+})
 
 viz.then(viz => {
     $svgRendition = viz.renderSVGElement(bookSchema)
@@ -141,7 +144,7 @@ viz.then(viz => {
             let $choices = document.getElementById('episode-choices-panel')
             $choices.innerHTML = ''
 
-            let $choice = new Choice('choice')
+            let $choice = new Choice('choice', episodeId)
             $choices.appendChild($choice.render())
         })
     })
