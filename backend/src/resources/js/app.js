@@ -95,22 +95,7 @@ const schema = new BookSchema(bookSchema)
 
 let $graph = document.getElementById('graph')
 let $svgRendition;
-
-// let $button = document.createElement('BUTTON')
-// $button.appendChild(document.createTextNode('add to graph'))
-
-// $button.addEventListener('click', () => {
-//     console.log('button clicked')
-//     bookSchema.nodes.push({ name: "dynamic node", attributes: { label: { html: "<b>Dyn</b>" }, color: "cyan" } })
-//     bookSchema.edges.push({ tail: "E4", head: "dynamic node", attributes: { label: "dynamic link" } })
-
-//     viz.then(viz => {
-//         $svgRendition = viz.renderSVGElement(bookSchema)
-//         $graph.innerHTML = ""
-//         $graph.appendChild($svgRendition)
-//     })
-// })
-// document.body.appendChild($button)
+let editingEpisodeUuid;
 
 let $editor = tinymce.init({
     selector: 'textarea#text-editor',
@@ -132,13 +117,11 @@ function renderBookSchema(viz) {
 
     document.querySelectorAll('.node').forEach((node) => {
         node.addEventListener('click', (e) => {
-            console.log(e.target.parentElement.getAttribute('id'))
-
             let $epiNode = e.target.parentElement
-            let episodeId = $epiNode.getAttribute('id')
+            let episodeId = editingEpisodeUuid = $epiNode.getAttribute('id')
             let episodeSummary = $epiNode.querySelector('text').innerHTML
 
-            document.getElementById('episode-summary').innerHTML = episodeSummary
+            document.getElementById('episode-summary').value = episodeSummary
             tinymce.activeEditor.setContent(episodeId);
 
             let $choices = document.getElementById('episode-choices-panel')
@@ -148,12 +131,13 @@ function renderBookSchema(viz) {
             $choices.appendChild($choice.render())
         })
     })
-    document.getElementById('btn-add-choice').addEventListener('click', (e) => {
-        let $choices = document.getElementById('episode-choices-panel')
-        let $choice = new Choice('choice')
-        $choices.appendChild($choice.render())
-    })
 }
+
+document.getElementById('btn-add-choice').addEventListener('click', (e) => {
+    let $choices = document.getElementById('episode-choices-panel')
+    let $choice = new Choice('choice', editingEpisodeUuid)
+    $choices.appendChild($choice.render())
+})
 
 document.addEventListener('moyra:episode-make', (e) => {
     console.log(e.detail)
@@ -170,32 +154,3 @@ document.addEventListener('moyra:episode-make', (e) => {
 })
 
 viz.then(renderBookSchema)
-
-// viz.then((viz) => {
-//     $svgRendition = viz.renderSVGElement(schema.asGraphviz())
-//     $graph.appendChild($svgRendition)
-
-//     document.querySelectorAll(".node").forEach((node) => {
-//         node.addEventListener('click', (e) => {
-//             console.log(e.target.parentElement.getAttribute('id'))
-
-//             let $epiNode = e.target.parentElement
-//             let episodeId = $epiNode.getAttribute('id')
-//             let episodeSummary = $epiNode.querySelector('text').innerHTML
-
-//             document.getElementById('episode-summary').innerHTML = episodeSummary
-//             tinymce.activeEditor.setContent(episodeId);
-
-//             let $choices = document.getElementById('episode-choices-panel')
-//             $choices.innerHTML = ''
-
-//             let $choice = new Choice('choice', episodeId)
-//             $choices.appendChild($choice.render())
-//         })
-//     })
-//     document.getElementById('btn-add-choice').addEventListener('click', (e) => {
-//         let $choices = document.getElementById('episode-choices-panel')
-//         let $choice = new Choice('choice')
-//         $choices.appendChild($choice.render())
-//     })
-// });

@@ -6,7 +6,9 @@
             body {
                 font-family: "Georgia", "Times New Roman";
             }
-
+            .editor {
+                margin:1rem 0;
+            }
             .episode-editor {
                 position:relative;
                 width:40%;
@@ -40,7 +42,10 @@
     <body>
         <div id="graph" class="graph" style="width: 100%; height: 50%; overflow: scroll; position: relative;"></div>
         <div id="editor" class="episode-editor">
-            <h3 id="episode-summary"></h3>
+            <div>
+                <label for="episode-summary">Summary</label>
+                <input type="text" name="episode-summary" id="episode-summary"/>
+            </div>
             <textarea id="text-editor"></textarea>
         </div>
         <div class="episode-choices">

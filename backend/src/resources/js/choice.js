@@ -7,7 +7,8 @@ export default class Choice {
     #cssClass
 
     #$dom
-    #$input
+    #$contentInput
+    #$summaryInput
     #$editChoiceEpisodeButton
     #$deleteChoiceButton
 
@@ -22,15 +23,32 @@ export default class Choice {
         this.#episodeUuid = episodeUuid
         this.#uuid = uuid ?? uuidv4()
 
-        this.#initInput()
+        this.#initContentInput()
+        this.#initSummaryInput()
         this.#initEditChoiceEpisodeButton()
         this.#initDeleteChoiceButton()
 
         this.#makeDomNode()
     }
 
-    #initInput() {
-        this.#$input = document.createElement('INPUT')
+    #initContentInput() {
+        this.#$contentInput = document.createElement('DIV')
+
+        let $label = document.createElement('LABEL')
+        $label.innerHTML = 'Content:'
+        this.#$contentInput.appendChild($label)
+
+        this.#$contentInput.appendChild(document.createElement('INPUT'))
+    }
+
+    #initSummaryInput() {
+        this.#$summaryInput = document.createElement('DIV')
+
+        let $label = document.createElement('LABEL')
+        $label.innerHTML = 'Summary:'
+        this.#$summaryInput.appendChild($label)
+
+        this.#$summaryInput.appendChild(document.createElement('INPUT'))
     }
 
     #initEditChoiceEpisodeButton() {
@@ -44,8 +62,8 @@ export default class Choice {
                         uuid: this.#uuid,
                         episodeUuid: this.#episodeUuid,
                         towardsEpisodeUuid: uuidv4(),
-                        episodeSummary: `Player: ${this.#$input.value}`,
-                        choiceSummary: this.#$input.value
+                        episodeSummary: `Player: ${this.#$summaryInput.querySelector('input').value}`,
+                        choiceSummary: this.#$summaryInput.querySelector('input').value
                     }
                 })
             )
@@ -60,7 +78,8 @@ export default class Choice {
     #makeDomNode() {
         this.#$dom = document.createElement('DIV')
         this.#$dom.classList.add(this.#cssClass)
-        this.#$dom.appendChild(this.#$input)
+        this.#$dom.appendChild(this.#$summaryInput)
+        this.#$dom.appendChild(this.#$contentInput)
         this.#$dom.appendChild(this.#$editChoiceEpisodeButton)
         this.#$dom.appendChild(this.#$deleteChoiceButton)
     }
