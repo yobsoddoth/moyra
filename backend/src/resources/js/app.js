@@ -17,6 +17,7 @@ import 'tinymce/plugins/searchreplace';
 import 'tinymce/plugins/visualblocks';
 
 import Choice from './choice'
+import BookSchema from './bookschema'
 
 const graph = {
     graphAttributes: {
@@ -90,6 +91,8 @@ const bookSchema = {
 }
 
 const viz = instance()
+const schema = new BookSchema(bookSchema)
+
 let $graph = document.getElementById('graph')
 let $svgRendition;
 
@@ -122,15 +125,12 @@ let $editor = tinymce.init({
       'bullist numlist checklist outdent indent | removeformat | a11ycheck code table help',
   });
 
-document.addEventListener('moyra:episode-make', (e) => {
-    console.log(e.detail)
-})
-
-viz.then(viz => {
-    $svgRendition = viz.renderSVGElement(bookSchema)
+function renderBookSchema(viz) {
+    $svgRendition = viz.renderSVGElement(schema.asGraphviz())
+    $graph.innerHTML = ''
     $graph.appendChild($svgRendition)
 
-    document.querySelectorAll(".node").forEach((node) => {
+    document.querySelectorAll('.node').forEach((node) => {
         node.addEventListener('click', (e) => {
             console.log(e.target.parentElement.getAttribute('id'))
 
@@ -153,4 +153,49 @@ viz.then(viz => {
         let $choice = new Choice('choice')
         $choices.appendChild($choice.render())
     })
-});
+}
+
+document.addEventListener('moyra:episode-make', (e) => {
+    console.log(e.detail)
+    let data = e.detail
+
+    schema.makeNode(data.episodeSummary, data.towardsEpisodeUuid)
+    schema.connect()
+        .from(data.episodeUuid)
+        .to(data.towardsEpisodeUuid)
+        .via(data.choiceSummary, data.uuid)
+        .end()
+
+    viz.then(renderBookSchema)
+})
+
+viz.then(renderBookSchema)
+
+// viz.then((viz) => {
+//     $svgRendition = viz.renderSVGElement(schema.asGraphviz())
+//     $graph.appendChild($svgRendition)
+
+//     document.querySelectorAll(".node").forEach((node) => {
+//         node.addEventListener('click', (e) => {
+//             console.log(e.target.parentElement.getAttribute('id'))
+
+//             let $epiNode = e.target.parentElement
+//             let episodeId = $epiNode.getAttribute('id')
+//             let episodeSummary = $epiNode.querySelector('text').innerHTML
+
+//             document.getElementById('episode-summary').innerHTML = episodeSummary
+//             tinymce.activeEditor.setContent(episodeId);
+
+//             let $choices = document.getElementById('episode-choices-panel')
+//             $choices.innerHTML = ''
+
+//             let $choice = new Choice('choice', episodeId)
+//             $choices.appendChild($choice.render())
+//         })
+//     })
+//     document.getElementById('btn-add-choice').addEventListener('click', (e) => {
+//         let $choices = document.getElementById('episode-choices-panel')
+//         let $choice = new Choice('choice')
+//         $choices.appendChild($choice.render())
+//     })
+// });

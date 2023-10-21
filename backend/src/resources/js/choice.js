@@ -44,6 +44,8 @@ export default class Choice {
                         uuid: this.#uuid,
                         episodeUuid: this.#episodeUuid,
                         towardsEpisodeUuid: uuidv4(),
+                        episodeSummary: `Player: ${this.#$input.value}`,
+                        choiceSummary: this.#$input.value
                     }
                 })
             )
