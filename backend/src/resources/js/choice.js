@@ -54,6 +54,7 @@ export default class Choice {
     #initEditChoiceEpisodeButton() {
         this.#$editChoiceEpisodeButton = document.createElement('BUTTON')
         this.#$editChoiceEpisodeButton.innerHTML = 'Make episode for choice'
+        this.#$editChoiceEpisodeButton.classList.add('btn', 'btn-sm', 'btn-primary')
 
         this.#$editChoiceEpisodeButton.addEventListener('click', () => {
             document.dispatchEvent(
@@ -73,6 +74,7 @@ export default class Choice {
     #initDeleteChoiceButton() {
         this.#$deleteChoiceButton = document.createElement('BUTTON')
         this.#$deleteChoiceButton.innerHTML = 'Delete choice'
+        this.#$deleteChoiceButton.classList.add('btn', 'btn-sm', 'btn-danger')
     }
 
     #makeDomNode() {

@@ -1,23 +1,24 @@
 import './bootstrap'
 
-import { instance } from "@viz-js/viz"
+import { instance } from '@viz-js/viz'
 
 // Import TinyMCE
-import tinymce from 'tinymce/tinymce';
+import tinymce from 'tinymce/tinymce'
 
 // A theme is also required
-import 'tinymce/themes/silver/theme';
-import 'tinymce/skins/ui/oxide/skin.min.css';
-import 'tinymce/skins/content/default/content.min.css';
-import 'tinymce/skins/content/default/content.css';
-import 'tinymce/icons/default/icons';
-import 'tinymce/models/dom/model';
-import 'tinymce/plugins/preview';
-import 'tinymce/plugins/searchreplace';
-import 'tinymce/plugins/visualblocks';
+import 'tinymce/themes/silver/theme'
+import 'tinymce/skins/ui/oxide/skin.min.css'
+import 'tinymce/skins/content/default/content.min.css'
+import 'tinymce/skins/content/default/content.css'
+import 'tinymce/icons/default/icons'
+import 'tinymce/models/dom/model'
+import 'tinymce/plugins/preview'
+import 'tinymce/plugins/searchreplace'
+import 'tinymce/plugins/visualblocks'
 
 import Choice from './choice'
 import BookSchema from './bookschema'
+import axios from 'axios'
 
 const graph = {
     graphAttributes: {
@@ -51,7 +52,7 @@ const graph = {
     ]
 }
 
-const bookSchema = {
+let bookSchema = {
     graphAttributes: {
         rankdir: "LR",
         bgcolor: "#eeeecc",
@@ -91,13 +92,24 @@ const bookSchema = {
 }
 
 const viz = instance()
-const schema = new BookSchema(bookSchema)
+
+axios.get('/api/write/schema/9a678df6-a8b9-405d-bd09-9a22846a3cda')
+    .then((response) => {
+        console.log(response)
+
+        bookSchema.nodes = response.data.nodes
+        bookSchema.edges = response.data.edges
+
+        document.dispatchEvent(new Event('moyra:book-schema-loaded'))
+    })
+
+let schema = new BookSchema(bookSchema)
 
 let $graph = document.getElementById('graph')
 let $svgRendition;
 let editingEpisodeUuid;
 
-let $editor = tinymce.init({
+tinymce.init({
     selector: 'textarea#text-editor',
     skin: false,
     content_css: false,
@@ -153,4 +165,8 @@ document.addEventListener('moyra:episode-make', (e) => {
     viz.then(renderBookSchema)
 })
 
-viz.then(renderBookSchema)
+document.addEventListener('moyra:book-schema-loaded', () => {
+    viz.then(renderBookSchema)
+})
+
+// viz.then(renderBookSchema)
