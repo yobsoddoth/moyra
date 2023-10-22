@@ -1,6 +1,6 @@
 <?php
 
-namespace Moyra\Interfaces;
+namespace Moyra\Interfaces\Books;
 
 interface BookInterface
 {

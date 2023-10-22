@@ -19,4 +19,9 @@ class Choice extends Model
     {
         return $this->hasMany(ChoiceI18n::class);
     }
+
+    public function episode()
+    {
+        return $this->belongsTo(Episode::class);
+    }
 }

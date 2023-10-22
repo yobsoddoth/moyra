@@ -40,3 +40,9 @@ Route::get('/read', function () {
         ],
     ]);
 });
+
+Route::get('/write/schema/{id}', function (string $id) {
+    return response()->json(
+        (new \App\Repos\Sql\BookSchemaRepo())->asGraphviz($id)
+    );
+});

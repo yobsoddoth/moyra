@@ -1,5 +1,7 @@
 <?php
 
-namespace ChoiceInterface
+namespace Moyra\Interfaces\Books;
+
+interface ChoiceInterface
 {
 }

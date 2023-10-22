@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Specs\Moyra\Books;
+namespace Tests\Spec\Moyra\Books;
 
 use Tests\Spec\MoyraSpecTestCase;
 
