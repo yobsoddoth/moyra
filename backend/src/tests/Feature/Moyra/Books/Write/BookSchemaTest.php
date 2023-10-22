@@ -97,4 +97,37 @@ class BookSchemaTest extends TestCase
             ],
         ]);
     }
+
+    public function test_load_episode_and_choices_in_original_language(): void
+    {
+        $episodeId = \App\Models\Books\Episode::where('is_prologue', 1)->first()->id;
+        $response = $this->get("/api/write/episode/{$episodeId}");
+        $response->assertStatus(200);
+
+        $this->assertJsonFootprint($response->getContent(), [
+            'id' => '<uuid>',
+            'summary' => '<text>',
+            'content' => '<text>',
+            'choices' => [
+                [
+                    'id' => '<uuid>',
+                    'towardsEpisodeId' => '<uuid>',
+                    'summary' => '<text>',
+                    'content' => '<text>',
+                ],
+                [
+                    'id' => '<uuid>',
+                    'towardsEpisodeId' => '<uuid>',
+                    'summary' => '<text>',
+                    'content' => '<text>',
+                ],
+                [
+                    'id' => '<uuid>',
+                    'towardsEpisodeId' => '<uuid>',
+                    'summary' => '<text>',
+                    'content' => '<text>',
+                ],
+            ],
+        ]);
+    }
 }

@@ -4,6 +4,7 @@ import { v4 as uuidv4 } from 'uuid'
 export default class Choice {
     #uuid
     #episodeUuid
+    #choiceData
     #cssClass
 
     #$dom
@@ -17,15 +18,19 @@ export default class Choice {
      * @param {string} cssClass
      * @param {uuid} episodeUuid
      * @param {uuid|null} uuid
+     * @param {Object} choiceData
      */
-    constructor(cssClass, episodeUuid, uuid) {
+    constructor(cssClass, episodeUuid, choiceData) {
         this.#cssClass = cssClass
         this.#episodeUuid = episodeUuid
-        this.#uuid = uuid ?? uuidv4()
+        this.#choiceData = choiceData || {}
+        this.#uuid = choiceData ? choiceData.id : uuidv4()
 
         this.#initContentInput()
         this.#initSummaryInput()
-        this.#initEditChoiceEpisodeButton()
+        if (!choiceData?.content)
+            this.#initEditChoiceEpisodeButton()
+
         this.#initDeleteChoiceButton()
 
         this.#makeDomNode()
@@ -38,7 +43,9 @@ export default class Choice {
         $label.innerHTML = 'Content:'
         this.#$contentInput.appendChild($label)
 
-        this.#$contentInput.appendChild(document.createElement('INPUT'))
+        let $input = document.createElement('INPUT')
+        $input.value = this.#choiceData?.content
+        this.#$contentInput.appendChild($input)
     }
 
     #initSummaryInput() {
@@ -48,7 +55,9 @@ export default class Choice {
         $label.innerHTML = 'Summary:'
         this.#$summaryInput.appendChild($label)
 
-        this.#$summaryInput.appendChild(document.createElement('INPUT'))
+        let $input = document.createElement('INPUT')
+        $input.value = this.#choiceData?.summary
+        this.#$summaryInput.appendChild($input)
     }
 
     #initEditChoiceEpisodeButton() {
@@ -82,7 +91,7 @@ export default class Choice {
         this.#$dom.classList.add(this.#cssClass)
         this.#$dom.appendChild(this.#$summaryInput)
         this.#$dom.appendChild(this.#$contentInput)
-        this.#$dom.appendChild(this.#$editChoiceEpisodeButton)
+        this.#$editChoiceEpisodeButton && this.#$dom.appendChild(this.#$editChoiceEpisodeButton)
         this.#$dom.appendChild(this.#$deleteChoiceButton)
     }
 

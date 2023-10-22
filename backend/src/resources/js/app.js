@@ -134,13 +134,24 @@ function renderBookSchema(viz) {
             let episodeSummary = $epiNode.querySelector('text').innerHTML
 
             document.getElementById('episode-summary').value = episodeSummary
-            tinymce.activeEditor.setContent(episodeId);
 
-            let $choices = document.getElementById('episode-choices-panel')
-            $choices.innerHTML = ''
+            axios.get(`/api/write/episode/${episodeId}`)
+                .then((response) => {
+                    tinymce.activeEditor.setContent(response.data.content)
 
-            let $choice = new Choice('choice', episodeId)
-            $choices.appendChild($choice.render())
+                    let $choices = document.getElementById('episode-choices-panel')
+                    $choices.innerHTML = ''
+
+                    response.data.choices.forEach((ch) => {
+                        let $choice = new Choice('choice', episodeId, ch)
+                        $choices.appendChild($choice.render())
+                    })
+                })
+
+
+
+            // let $choice = new Choice('choice', episodeId)
+            // $choices.appendChild($choice.render())
         })
     })
 }

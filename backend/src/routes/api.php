@@ -46,3 +46,9 @@ Route::get('/write/schema/{id}', function (string $id) {
         (new \App\Repos\Sql\BookSchemaRepo())->asGraphviz($id)
     );
 });
+
+Route::get('/write/episode/{id}', function (string $id) {
+    return response()->json(
+        (new \App\Repos\Sql\BookRepo())->fetchEpisodeAndChoices($id)
+    );
+});
