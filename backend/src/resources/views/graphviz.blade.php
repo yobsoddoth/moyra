@@ -48,6 +48,13 @@
             .choice button {
                 margin: 0.05rem
             }
+            .choice-content-input {
+                font-family: "Georgia";
+                font-size: 1.1rem;
+            }
+            .choice-summary-input {
+                font-size: 0.9rem;
+            }
         </style>
         <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js" integrity="sha384-cuYeSxntonz0PPNlHhBs68uyIAVpIIOZZ5JqeqvYYIcEL727kskC66kF92t6Xl2V" crossorigin="anonymous"></script>
     </head>

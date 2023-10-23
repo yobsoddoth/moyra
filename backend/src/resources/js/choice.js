@@ -44,7 +44,8 @@ export default class Choice {
         this.#$contentInput.appendChild($label)
 
         let $input = document.createElement('INPUT')
-        $input.value = this.#choiceData?.content
+        $input.value = this.#choiceData?.content || ""
+        $input.classList.add('choice-content-input')
         this.#$contentInput.appendChild($input)
     }
 
@@ -56,7 +57,8 @@ export default class Choice {
         this.#$summaryInput.appendChild($label)
 
         let $input = document.createElement('INPUT')
-        $input.value = this.#choiceData?.summary
+        $input.value = this.#choiceData?.summary || ""
+        $input.classList.add('choice-summary-input')
         this.#$summaryInput.appendChild($input)
     }
 

@@ -112,7 +112,8 @@ let editingEpisodeUuid;
 tinymce.init({
     selector: 'textarea#text-editor',
     skin: false,
-    content_css: false,
+    // content_css: false,
+    content_style: "body { font-family: Georgia; font-size: 14pt;}",
     menubar: false,
     plugins: [
       'preview','searchreplace','visualblocks',
@@ -135,18 +136,25 @@ function renderBookSchema(viz) {
 
             document.getElementById('episode-summary').value = episodeSummary
 
-            axios.get(`/api/write/episode/${episodeId}`)
-                .then((response) => {
-                    tinymce.activeEditor.setContent(response.data.content)
+            if (!schema.isFreshNode(episodeId))
+                axios.get(`/api/write/episode/${episodeId}`)
+                    .then((response) => {
+                        tinymce.activeEditor.setContent(response.data.content)
 
-                    let $choices = document.getElementById('episode-choices-panel')
-                    $choices.innerHTML = ''
+                        let $choices = document.getElementById('episode-choices-panel')
+                        $choices.innerHTML = ''
 
-                    response.data.choices.forEach((ch) => {
-                        let $choice = new Choice('choice', episodeId, ch)
-                        $choices.appendChild($choice.render())
+                        response.data?.choices.forEach((ch) => {
+                            let $choice = new Choice('choice', episodeId, ch)
+                            $choices.appendChild($choice.render())
+                        })
+                    },
+                    (error) => {
+                        console.log(error)
+                        let $choices = document.getElementById('episode-choices-panel')
+                        $choices.innerHTML = ''
+                        tinymce.activeEditor.setContent(episodeSummary)
                     })
-                })
 
 
 

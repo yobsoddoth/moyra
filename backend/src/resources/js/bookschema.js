@@ -79,6 +79,7 @@ class Connector {
             attributes: {
                 label: this.#choiceSummary,
                 id: this.#choiceUuid,
+                is_fresh: true
             },
         }
         this.#schema.edges.push(edge)
@@ -111,5 +112,9 @@ export default class BookSchema {
 
     asGraphviz() {
         return this.#schema
+    }
+
+    isFreshNode(nodeUuid) {
+        return !!this.#schema.nodes.filter((node) => node.name == nodeUuid).attributes?.is_fresh
     }
 }
